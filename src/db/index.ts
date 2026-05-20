@@ -4,6 +4,9 @@ import config from "../config";
 export const sql = neon(config.database_url);
 
 export const initDB = async () => {
+
+  
+
   await sql`
     CREATE TABLE IF NOT EXISTS users (
     id SERIAL PRIMARY KEY,
