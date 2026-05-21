@@ -4,7 +4,7 @@ import { sendResponse } from "../../utils/sendResponse";
 import { signToken, verifyToken } from "../../utils/jwt";
 
 export const signup = async (req: Request, res: Response) => {
-  const user = await authService.createUser(req.body);
+  const user = await authService.createUser(req.body || {});
 
   if (!user) {
     sendResponse(res, { message: "Failed To Create User" }, 400);
@@ -15,7 +15,7 @@ export const signup = async (req: Request, res: Response) => {
 };
 
 export const login = async (req: Request, res: Response) => {
-  const { email, password } = req.body;
+  const { email, password } = req.body || {};
 
   const user = await authService.validateUser(email, password);
 

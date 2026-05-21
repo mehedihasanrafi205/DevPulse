@@ -3,7 +3,7 @@ import { sendResponse } from "../../utils/sendResponse";
 import issuesService from "../services/issues.service";
 
 export const createIssueController = async (req: Request, res: Response) => {
-  const { title, description, type } = req.body;
+  const { title, description, type } = req.body || {};
 
   if (!title || title.length > 150) {
     return sendResponse(
@@ -57,6 +57,29 @@ export const getAllIssuesController = async (req: Request, res: Response) => {
     {
       success: true,
       data: issues,
+    } as any,
+    200,
+  );
+};
+
+export const getIssueByIdController = async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const issueId = Number(id);
+  if (isNaN(issueId)) {
+    return sendResponse(res, { message: "Invalid issue ID format" }, 400);
+  }
+
+  const issue = await issuesService.getIssueById(issueId);
+
+  if (!issue) {
+    return sendResponse(res, { message: "Issue not found" }, 404);
+  }
+
+  sendResponse(
+    res,
+    {
+      success: true,
+      data: issue,
     } as any,
     200,
   );
