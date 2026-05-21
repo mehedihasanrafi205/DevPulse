@@ -1,7 +1,7 @@
 import type { Request, Response } from "express";
 import authService from "../services/auth.service";
 import { sendResponse } from "../../utils/sendResponse";
-import { signToken } from "../../utils/jwt";
+import { signToken, verifyToken } from "../../utils/jwt";
 
 export const signup = async (req: Request, res: Response) => {
   const user = await authService.createUser(req.body);
@@ -24,9 +24,9 @@ export const login = async (req: Request, res: Response) => {
     return;
   }
 
-  const { accessToken, referenceToken } = signToken(user);
+  const { accessToken, refreshToken } = signToken(user);
 
-  res.cookie("refreshToken", referenceToken, {
+  res.cookie("refreshToken", refreshToken, {
     secure: false,
     httpOnly: true,
     sameSite: "lax",
@@ -35,7 +35,7 @@ export const login = async (req: Request, res: Response) => {
   const result = {
     user: user,
     accessToken,
-    referenceToken,
+    refreshToken,
   };
 
   return sendResponse(res, {
@@ -43,3 +43,38 @@ export const login = async (req: Request, res: Response) => {
     data: result,
   });
 };
+
+export const refresh = async (req: Request, res: Response) => {
+  const refreshToken = req.cookies?.refreshToken;
+  if (!refreshToken) {
+    return sendResponse(res, { message: "Refresh Token not found" }, 401);
+  }
+  const payload = verifyToken(refreshToken, "refresh");
+
+  if (!payload) {
+    return sendResponse(res, { message: "Invalid Refresh Token" }, 401);
+  }
+
+  const user = await authService.getUserById(payload.id);
+  if (!user) {
+    return sendResponse(res, { message: "User not found" }, 401);
+  }
+  const { accessToken, refreshToken: newRefreshToken } = signToken(user);
+
+  (res.cookie("refreshToken", refreshToken),
+    {
+      secure: false,
+      httpOnly: true,
+      sameSite: "lax",
+    });
+
+  sendResponse(res, {
+    message: "Token Refreshed",
+    data: {
+      accessToken,
+      newRefreshToken,
+    },
+  });
+};
+
+

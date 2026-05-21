@@ -1,14 +1,18 @@
 import { Router } from "express";
-import { login, signup } from "../controllers/auth.controller";
+import { login, refresh, signup } from "../controllers/auth.controller";
+import { auth, authorizeRole } from "../../middleware/auth";
+import { createIssueController } from "../controllers/issues.controller";
 
 const router = Router();
 
 router.post("/auth/signup", signup);
 router.post("/auth/login", login);
+router.post("/auth/refresh", refresh);
 
-router.post("/issues", () => {});
-router.get("/issues", () => {});
-router.patch("/issues", () => {});
-router.delete("/issues/:id", () => {});
+router.post("/issues", auth, createIssueController);
+router.get("/issues", auth, () => {});
+router.get("/issues/:id", auth, () => {});
+router.patch("/issues/:id", auth, () => {});
+router.delete("/issues/:id", authorizeRole("maintainer"), () => {});
 
 export default router;

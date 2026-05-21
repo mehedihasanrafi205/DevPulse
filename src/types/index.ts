@@ -1,6 +1,6 @@
 export const role = ["contributor", "maintainer"] as const;
 
-type Role = (typeof role)[number];
+export type Role = (typeof role)[number];
 
 export type User = {
   id: number;
@@ -18,8 +18,8 @@ export type Issues = {
   id: number;
   title: string;
   description: string;
-  type: string;
-  status: Role;
+  type: "bug" | "feature_request";
+  status: "open" | "in_progress" | "resolved";
   reporter_id: number;
   created_at: Date;
   updated_at: Date;
