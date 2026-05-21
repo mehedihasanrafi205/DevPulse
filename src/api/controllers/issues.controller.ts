@@ -42,3 +42,22 @@ export const createIssueController = async (req: Request, res: Response) => {
     201,
   );
 };
+
+export const getAllIssuesController = async (req: Request, res: Response) => {
+  const { sort, type, status } = req.query;
+
+  const issues = await issuesService.getAllIssues({
+    sort: sort as string,
+    type: type as string,
+    status: status as string,
+  });
+
+  sendResponse(
+    res,
+    {
+      success: true,
+      data: issues,
+    } as any,
+    200,
+  );
+};
