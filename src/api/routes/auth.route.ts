@@ -1,5 +1,10 @@
 import { Router } from "express";
-import { login, refresh, signup } from "../controllers/auth.controller";
+import {
+  deleteIssueController,
+  login,
+  refresh,
+  signup,
+} from "../controllers/auth.controller";
 import { auth, authorizeRole } from "../../middleware/auth";
 import {
   createIssueController,
@@ -17,6 +22,11 @@ router.post("/issues", auth, createIssueController);
 router.get("/issues", auth, getAllIssuesController);
 router.get("/issues/:id", auth, getIssueByIdController);
 router.patch("/issues/:id", auth, () => {});
-router.delete("/issues/:id", authorizeRole("maintainer"), () => {});
+router.delete(
+  "/issues/:id",
+  auth,
+  authorizeRole("maintainer"),
+  deleteIssueController,
+);
 
 export default router;

@@ -5,9 +5,10 @@ export function sendResponse<T>(
   { message, data, error }: { message: unknown; data?: T; error?: boolean },
   status = 200,
 ) {
+  const isError = error !== undefined ? error : status >= 400;
   res.status(status).json({
-    success: error ? false : true,
+    success: !isError,
     message: message,
-    data: error ? undefined : data,
+    data: isError ? undefined : data,
   });
 }

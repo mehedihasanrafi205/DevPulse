@@ -36,6 +36,8 @@ class AuthService {
 
     return res[0] as RUser 
   }
+
+  
 }
 
 export default new AuthService();

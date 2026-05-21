@@ -105,6 +105,22 @@ class IssuesService {
         : null,
     };
   }
+
+  async deleteIssue(id: number): Promise<boolean> {
+    const check = await sql`
+    SELECT id FROM issues WHERE id = ${id};
+  `;
+
+    if (check.length === 0) {
+      return false;
+    }
+
+    await sql`
+    DELETE FROM issues WHERE id = ${id};
+  `;
+
+    return true;
+  }
 }
 
 export default new IssuesService();

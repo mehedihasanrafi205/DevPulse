@@ -2,6 +2,7 @@ import type { Request, Response } from "express";
 import authService from "../services/auth.service";
 import { sendResponse } from "../../utils/sendResponse";
 import { signToken, verifyToken } from "../../utils/jwt";
+import issuesService from "../services/issues.service";
 
 export const signup = async (req: Request, res: Response) => {
   const user = await authService.createUser(req.body || {});
@@ -77,4 +78,25 @@ export const refresh = async (req: Request, res: Response) => {
   });
 };
 
+export const deleteIssueController = async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const issueId = Number(id);
 
+  if (isNaN(issueId)) {
+    return sendResponse(res, { message: "Invalid issue ID format" }, 400);
+  }
+
+  const isDeleted = await issuesService.deleteIssue(issueId);
+
+  if (!isDeleted) {
+    return sendResponse(res, { message: "Issue not found" }, 404);
+  }
+
+  sendResponse(
+    res,
+    {
+      message: "Issue deleted successfully",
+    },
+    200,
+  );
+};
