@@ -4,7 +4,7 @@
 *A collaborative platform for software teams to report bugs, suggest features, and coordinate resolutions.*
 
 ## Live URL
-- **Production API**: `[https://dev-pulse-alpha-smoky.vercel.app]`
+- **Production API**: https://dev-pulse-alpha-smoky.vercel.app
 
 ## Features
 - **User Authentication**: Secure signup and login functionality using JWT and bcrypt.
@@ -86,4 +86,4 @@ Stores bug reports and feature requests, linked to the reporter.
 - `DELETE /api/issues/:id` - Delete an issue (Requires Maintainer Auth)
 
 ---
-*Developed for B7A2 Mission 2: Be a Node Express Expert*
+*Powered by Node.js, Express, and TypeScript*
