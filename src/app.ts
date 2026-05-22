@@ -17,7 +17,10 @@ app.use(cookieParser());
 app.use(express.json());
 
 app.get("/", (req: Request, res: Response) => {
-  res.send("Hello world");
+  res.status(200).json({
+    success: true,
+    message: "Welcome to DevPulse API Server",
+  });
 });
 
 app.use("/api", authRoutes);
