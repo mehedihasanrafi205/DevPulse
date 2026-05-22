@@ -2,8 +2,9 @@ import type { Request, Response } from "express";
 import authService from "../services/auth.service";
 import { sendResponse } from "../../utils/sendResponse";
 import { signToken, verifyToken } from "../../utils/jwt";
+import catchAsync from "../../utils/catchAsync";
 
-export const signup = async (req: Request, res: Response) => {
+export const signup = catchAsync(async (req: Request, res: Response) => {
   const user = await authService.createUser(req.body || {});
 
   if (!user) {
@@ -12,9 +13,9 @@ export const signup = async (req: Request, res: Response) => {
   }
 
   sendResponse(res, { message: "User Created Successfully", data: user }, 201);
-};
+});
 
-export const login = async (req: Request, res: Response) => {
+export const login = catchAsync(async (req: Request, res: Response) => {
   const { email, password } = req.body || {};
 
   const user = await authService.validateUser(email, password);
@@ -42,9 +43,9 @@ export const login = async (req: Request, res: Response) => {
     message: "User Logging Successful!",
     data: result,
   });
-};
+});
 
-export const refresh = async (req: Request, res: Response) => {
+export const refresh = catchAsync(async (req: Request, res: Response) => {
   const refreshToken = req.cookies?.refreshToken;
   if (!refreshToken) {
     return sendResponse(res, { message: "Refresh Token not found" }, 401);
@@ -75,5 +76,5 @@ export const refresh = async (req: Request, res: Response) => {
       newRefreshToken,
     },
   });
-};
+});
 

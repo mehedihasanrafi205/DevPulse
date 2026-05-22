@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
 import { sendResponse } from "../../utils/sendResponse";
 import issuesService from "../services/issues.service";
-
-export const createIssueController = async (req: Request, res: Response) => {
+import catchAsync from "../../utils/catchAsync";
+export const createIssueController = catchAsync(async (req: Request, res: Response) => {
   const { title, description, type } = req.body || {};
 
   if (!title || title.length > 150) {
@@ -41,9 +41,9 @@ export const createIssueController = async (req: Request, res: Response) => {
     },
     201,
   );
-};
+});
 
-export const getAllIssuesController = async (req: Request, res: Response) => {
+export const getAllIssuesController = catchAsync(async (req: Request, res: Response) => {
   const { sort, type, status } = req.query;
 
   const issues = await issuesService.getAllIssues({
@@ -60,9 +60,9 @@ export const getAllIssuesController = async (req: Request, res: Response) => {
     } as any,
     200,
   );
-};
+});
 
-export const getIssueByIdController = async (req: Request, res: Response) => {
+export const getIssueByIdController = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
   const issueId = Number(id);
   if (isNaN(issueId)) {
@@ -83,9 +83,9 @@ export const getIssueByIdController = async (req: Request, res: Response) => {
     } as any,
     200,
   );
-};
+});
 
-export const updateIssueController = async (req: Request, res: Response) => {
+export const updateIssueController = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
   const { title, description, type } = req.body;
   const issueId = Number(id);
@@ -158,9 +158,9 @@ export const updateIssueController = async (req: Request, res: Response) => {
     },
     200,
   );
-};
+});
 
-export const deleteIssueController = async (req: Request, res: Response) => {
+export const deleteIssueController = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
   const issueId = Number(id);
 
@@ -181,4 +181,4 @@ export const deleteIssueController = async (req: Request, res: Response) => {
     },
     200,
   );
-};
+});
