@@ -105,6 +105,34 @@ class IssuesService {
         : null,
     };
   }
+  async getRawIssueById(id: number) {
+    const res = await sql`
+      SELECT id, title, description, type, status, reporter_id, created_at, updated_at 
+      FROM issues 
+      WHERE id = ${id};
+    `;
+    return res[0] || null;
+  }
+
+  async updateIssue(
+    id: number,
+    fieldsToUpdate: { title?: string; description?: string; type?: string },
+  ) {
+    const { title, description, type } = fieldsToUpdate;
+
+    const res = await sql`
+      UPDATE issues
+      SET 
+        title = COALESCE(${title || null}, title),
+        description = COALESCE(${description || null}, description),
+        type = COALESCE(${type || null}, type),
+        updated_at = NOW()
+      WHERE id = ${id}
+      RETURNING id, title, description, type, status, reporter_id, created_at, updated_at;
+    `;
+
+    return res[0];
+  }
 
   async deleteIssue(id: number): Promise<boolean> {
     const check = await sql`

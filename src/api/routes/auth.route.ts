@@ -10,6 +10,7 @@ import {
   createIssueController,
   getAllIssuesController,
   getIssueByIdController,
+  updateIssueController,
 } from "../controllers/issues.controller";
 
 const router = Router();
@@ -21,7 +22,7 @@ router.post("/auth/refresh", refresh);
 router.post("/issues", auth, createIssueController);
 router.get("/issues", auth, getAllIssuesController);
 router.get("/issues/:id", auth, getIssueByIdController);
-router.patch("/issues/:id", auth, () => {});
+router.patch("/issues/:id", auth, updateIssueController);
 router.delete(
   "/issues/:id",
   auth,
