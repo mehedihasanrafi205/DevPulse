@@ -10,11 +10,13 @@ const globalErrorHandler = (
   res.status(500).json({
     success: false,
     message: err instanceof Error ? err.message : "Internal Server Error",
+    errors: err instanceof Error ? err : { message: "Unknown error" },
     stack:
       config.node_env === "development" && err instanceof Error
         ? err.stack
         : undefined,
   });
 };
+
 
 export default globalErrorHandler;

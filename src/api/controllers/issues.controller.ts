@@ -158,6 +158,27 @@ export const updateIssueController = async (req: Request, res: Response) => {
     },
     200,
   );
+};
 
-  
+export const deleteIssueController = async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const issueId = Number(id);
+
+  if (isNaN(issueId)) {
+    return sendResponse(res, { message: "Invalid issue ID format" }, 400);
+  }
+
+  const isDeleted = await issuesService.deleteIssue(issueId);
+
+  if (!isDeleted) {
+    return sendResponse(res, { message: "Issue not found" }, 404);
+  }
+
+  sendResponse(
+    res,
+    {
+      message: "Issue deleted successfully",
+    },
+    200,
+  );
 };
